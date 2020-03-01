@@ -1,39 +1,42 @@
-import * as React from 'react';
-
+import React, {useState, useEffect, useCallback } from 'react';
 import * as toastr from 'toastr';
 import { ApiService } from '../services/ApiService';
-import { AuthService } from '../services/AuthService';
-
+import AuthService from '../services/AuthService';
 import AuthContent from './AuthContent';
 import Buttons from './Buttons';
+import { User } from 'oidc-client';
 
-export default class AppContent extends React.Component<any, any> {
-  public authService: AuthService;
-  public apiService: ApiService;
-  private shouldCancel: boolean;
+interface IAppContent {
+  authService: AuthService;
+  apiService: ApiService;
+}
 
-  constructor(props: any) {
-    super(props);
+const AppContent: React.FC<IAppContent> = (props) => {
 
-    this.authService = new AuthService();
-    this.apiService = new ApiService();
-    this.state = { user: {}, api: {} };
-    this.shouldCancel = false;
-  }
+  const [user, setUser] = useState<User | null>();
+  const [api, setApi] = useState();
+  
+  const serviceGetUser = useCallback(async () => {
+    const userResponse = await props.authService.getUser();
+      if (userResponse) {
+        toastr.success('User has been successfully loaded from store.');
+      } else {
+        toastr.info('You are not logged in.');
+      }
 
-  public componentDidMount() {
-    this.getUser();
-  }
+      setUser(userResponse);
+      return userResponse;
+  }, [props.authService]);
 
-  public login = () => {
-    this.authService.login();
-  };
+  useEffect(() => {
+    serviceGetUser();
+  }, [serviceGetUser]);
 
-  public callApi = () => {
-    this.apiService
+  const callApi = () => {
+    props.apiService
       .callApi()
       .then(data => {
-        this.setState({ api: data.data });
+        setApi(data.data);
         toastr.success('Api return successfully data, check in section - Api response');
       })
       .catch(error => {
@@ -41,53 +44,39 @@ export default class AppContent extends React.Component<any, any> {
       });
   };
 
-  public componentWillUnmount() {
-    this.shouldCancel = true;
-  }
-
-  public renewToken = () => {
-    this.authService
+  const renewToken = () => {
+    props.authService
       .renewToken()
       .then(user => {
         toastr.success('Token has been sucessfully renewed. :-)');
-        this.getUser();
+        serviceGetUser();
       })
       .catch(error => {
         toastr.error(error);
       });
   };
 
-  public logout = () => {
-    this.authService.logout();
+  const login = () => {
+    props.authService.login();
   };
 
-  public getUser = () => {
-    this.authService.getUser().then(user => {
-      if (user) {
-        toastr.success('User has been successfully loaded from store.');
-      } else {
-        toastr.info('You are not logged in.');
-      }
-
-      if (!this.shouldCancel) {
-        this.setState({ user });
-      }
-    });
+  const logout = () => {
+    props.authService.logout();
   };
 
-  public render() {
-    return (
-      <>
-        <Buttons
-          login={this.login}
-          logout={this.logout}
-          renewToken={this.renewToken}
-          getUser={this.getUser}
-          callApi={this.callApi}
-        />
+  return (
+    <>
+      <Buttons
+        login={login}
+        logout={logout}
+        renewToken={renewToken}
+        getUser={serviceGetUser}
+        callApi={callApi}
+      />
 
-        <AuthContent api={this.state.api} user={this.state.user} />
-      </>
-    );
-  }
+      <AuthContent api={api} user={user} />
+    </>
+  );
 }
+
+export default AppContent;

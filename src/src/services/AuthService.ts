@@ -2,10 +2,11 @@ import { Log, User, UserManager } from 'oidc-client';
 
 import { Constants } from '../helpers/Constants';
 
-export class AuthService {
+export default class AuthService {
   public userManager: UserManager;
 
   constructor() {
+    console.log("New Auth Service");
     const settings = {
       authority: Constants.stsAuthority,
       client_id: Constants.clientId,
