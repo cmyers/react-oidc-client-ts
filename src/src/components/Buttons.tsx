@@ -8,7 +8,7 @@ interface IButtonsProps {
   logout: () => void;
 }
 
-const Buttons: React.SFC<IButtonsProps> = props => {
+const Buttons: React.FC<IButtonsProps> = (props) => {
   return (
     <div className="row">
       <div className="col-md-12 text-center" style={{ marginTop: '30px' }}>

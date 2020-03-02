@@ -1,14 +1,14 @@
 import React, {useState, useEffect, useCallback } from 'react';
 import * as toastr from 'toastr';
-import { ApiService } from '../services/ApiService';
-import AuthService from '../services/AuthService';
+import { IApiService } from '../services/ApiService';
+import { IAuthService } from '../services/AuthService';
 import AuthContent from './AuthContent';
 import Buttons from './Buttons';
 import { User } from 'oidc-client';
 
 interface IAppContent {
-  authService: AuthService;
-  apiService: ApiService;
+  authService: IAuthService;
+  apiService: IApiService;
 }
 
 const AppContent: React.FC<IAppContent> = (props) => {

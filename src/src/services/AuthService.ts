@@ -1,8 +1,14 @@
 import { Log, User, UserManager } from 'oidc-client';
-
 import { Constants } from '../helpers/Constants';
 
-export default class AuthService {
+export interface IAuthService {
+  getUser(): Promise<User | null>;
+  login(): Promise<void>;
+  logout(): Promise<void>;
+  renewToken(): Promise<User>
+}
+
+export default class AuthService implements IAuthService {
   public userManager: UserManager;
 
   constructor() {

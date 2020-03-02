@@ -3,11 +3,11 @@ import AppContent from '../components/AppContent';
 import Header from '../components/Header';
 import logo from '../logo.svg';
 import './App.css';
-import { ApiService } from '../services/ApiService';
-import AuthService from '../services/AuthService';
+import ApiService, {IApiService} from '../services/ApiService';
+import AuthService, {IAuthService} from '../services/AuthService';
 
-const authService = new AuthService();
-const apiService = new ApiService();
+const authService: IAuthService = new AuthService();
+const apiService: IApiService = new ApiService();
 
 const App: React.FC = () => {
     return (

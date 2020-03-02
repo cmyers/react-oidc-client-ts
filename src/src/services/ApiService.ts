@@ -2,7 +2,11 @@ import axios from 'axios';
 import { Constants } from '../helpers/Constants';
 import AuthService from './AuthService';
 
-export class ApiService {
+export interface IApiService {
+  callApi(): Promise<any>;
+}
+
+export default class ApiService implements IApiService {
   private authService: AuthService;
 
   constructor() {
