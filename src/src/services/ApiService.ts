@@ -1,31 +1,31 @@
 import axios from 'axios';
 import { Constants } from '../helpers/Constants';
-import AuthService from './AuthService';
+import { IAuthService } from './AuthService';
 
 export interface IApiService {
   callApi(): Promise<any>;
 }
 
 export default class ApiService implements IApiService {
-  private authService: AuthService;
+  private _authService: IAuthService;
 
-  constructor() {
-    this.authService = new AuthService();
+  constructor(authService: IAuthService) {
+    this._authService = authService;
   }
 
   public callApi(): Promise<any> {
-    return this.authService.getUser().then(user => {
+    return this._authService.getUser().then(user => {
       if (user && user.access_token) {
         return this._callApi(user.access_token).catch(error => {
           if (error.response.status === 401) {
-            return this.authService.renewToken().then(renewedUser => {
+            return this._authService.renewToken().then(renewedUser => {
               return this._callApi(renewedUser.access_token);
             });
           }
           throw error;
         });
       } else if (user) {
-        return this.authService.renewToken().then(renewedUser => {
+        return this._authService.renewToken().then(renewedUser => {
           return this._callApi(renewedUser.access_token);
         });
       } else {

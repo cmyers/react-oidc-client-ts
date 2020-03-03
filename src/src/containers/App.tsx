@@ -7,7 +7,7 @@ import ApiService, {IApiService} from '../services/ApiService';
 import AuthService, {IAuthService} from '../services/AuthService';
 
 const authService: IAuthService = new AuthService();
-const apiService: IApiService = new ApiService();
+const apiService: IApiService = new ApiService(authService);
 
 const App: React.FC = () => {
     return (

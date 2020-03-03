@@ -5,11 +5,11 @@ export interface IAuthService {
   getUser(): Promise<User | null>;
   login(): Promise<void>;
   logout(): Promise<void>;
-  renewToken(): Promise<User>
+  renewToken(): Promise<User>;
 }
 
 export default class AuthService implements IAuthService {
-  public userManager: UserManager;
+  private _userManager: UserManager;
 
   constructor() {
     console.log("New Auth Service");
@@ -23,25 +23,25 @@ export default class AuthService implements IAuthService {
       response_type: 'code',
       scope: Constants.clientScope
     };
-    this.userManager = new UserManager(settings);
+    this._userManager = new UserManager(settings);
 
     Log.logger = console;
     Log.level = Log.INFO;
   }
 
   public getUser(): Promise<User | null> {
-    return this.userManager.getUser();
+    return this._userManager.getUser();
   }
 
   public login(): Promise<void> {
-    return this.userManager.signinRedirect();
+    return this._userManager.signinRedirect();
   }
 
   public renewToken(): Promise<User> {
-    return this.userManager.signinSilent();
+    return this._userManager.signinSilent();
   }
 
   public logout(): Promise<void> {
-    return this.userManager.signoutRedirect();
+    return this._userManager.signoutRedirect();
   }
 }
