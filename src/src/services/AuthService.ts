@@ -6,6 +6,7 @@ export interface IAuthService {
   login(): Promise<void>;
   logout(): Promise<void>;
   renewToken(): Promise<User>;
+  signinCallback(): Promise<User>;
 }
 
 export default class AuthService implements IAuthService {
@@ -16,7 +17,7 @@ export default class AuthService implements IAuthService {
     const settings = {
       authority: Constants.stsAuthority,
       client_id: Constants.clientId,
-      redirect_uri: `${Constants.clientRoot}signin-callback.html`,
+      redirect_uri: `${Constants.clientRoot}signin-callback`,
       silent_redirect_uri: `${Constants.clientRoot}silent-renew.html`,
       // tslint:disable-next-line:object-literal-sort-keys
       post_logout_redirect_uri: `${Constants.clientRoot}`,
@@ -43,5 +44,9 @@ export default class AuthService implements IAuthService {
 
   public logout(): Promise<void> {
     return this._userManager.signoutRedirect();
+  }
+
+  public signinCallback(): Promise<User> {
+    return this._userManager.signinRedirectCallback();
   }
 }
