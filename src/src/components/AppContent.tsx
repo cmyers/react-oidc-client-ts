@@ -52,19 +52,13 @@ const AppContent: React.FC<IAppContent> = (props) => {
       });
   };
 
-  const logout = () => {
-    props.authService.logout();
-  };
-
   return (
     <>
       <Buttons
-        logout={logout}
         renewToken={renewToken}
         getUser={serviceGetUser}
         callApi={callApi}
       />
-
       <AuthContent api={api} user={user} />
     </>
   );

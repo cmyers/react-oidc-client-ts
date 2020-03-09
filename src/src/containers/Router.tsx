@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, RouteProps, Link } from 'react-router-dom';
 import SigninCallback from '../containers/SigninCallback';
 import { IAuthService } from '../services/AuthService';
 import AppContent from '../components/AppContent';
@@ -13,31 +13,16 @@ interface IRouter {
   apiService: IApiService;
 }
 
-interface IProtectedRoute {
-  authService: IAuthService;
+interface IProtectedRoute extends RouteProps {
+  authService: IAuthService
 }
 
-const Router: React.FC<IRouter> = (props) => {
-
-  return (
-    <Switch>
-      <Route exact path='/'>
-        <ProtectedRoute authService={props.authService}>
-          <AppContent apiService={props.apiService} authService={props.authService} />
-        </ProtectedRoute>
-      </Route>
-      <Route exact path='/signin-callback' component={() => <SigninCallback authService={props.authService} />} />
-    </Switch>
-  );
-}
-
-const ProtectedRoute: React.FC<IProtectedRoute> = props => {
-
+const ProtectedRoute: React.FC<IProtectedRoute> = ({authService, children, ...rest}) => {
   const [user, setUser] = useState<User | null>();
 
   useEffect(() => {
     const serviceGetUser = async () => {
-      const userResponse = await props.authService.getUser();
+      const userResponse = await authService.getUser();
       if (userResponse) {
         toastr.success('User has been successfully loaded from store.');
       } else {
@@ -48,18 +33,44 @@ const ProtectedRoute: React.FC<IProtectedRoute> = props => {
     };
 
     serviceGetUser();
-  }, [props.authService]);
+  }, [authService]);
 
   const login = () => {
-    props.authService.login();
+    authService.login();
+  };
+
+  const logout = () => {
+    authService.logout();
   };
 
   return user != null ?
-    <>
-      {props.children}</> :
+    <Route {...rest}>
+      <Buttons logout={logout} />
+      {children}
+    </Route> :
     <Buttons
       login={login}
     />
+}
+
+const Router: React.FC<IRouter> = (props) => {
+
+  return (
+    <Switch>
+      <ProtectedRoute exact path='/' authService={props.authService}>
+        <div>
+          <h1>Home page</h1>
+          <Link to="/userdetails">User Details</Link>
+        </div>
+      </ProtectedRoute>
+      <ProtectedRoute exact path='/userdetails' authService={props.authService}>
+        <AppContent apiService={props.apiService} authService={props.authService} />
+      </ProtectedRoute>
+      <Route exact path='/signin-callback' authService={props.authService}>
+        <SigninCallback authService={props.authService} />
+      </Route>
+    </Switch>
+  );
 }
 
 export default Router;
