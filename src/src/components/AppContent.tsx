@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback } from 'react';
+import React, {useState, useCallback } from 'react';
 import * as toastr from 'toastr';
 import { IApiService } from '../services/ApiService';
 import { IAuthService } from '../services/AuthService';
@@ -28,10 +28,6 @@ const AppContent: React.FC<IAppContent> = (props) => {
       return userResponse;
   }, [props.authService]);
 
-  useEffect(() => {
-    serviceGetUser();
-  }, [serviceGetUser]);
-
   const callApi = () => {
     props.apiService
       .callApi()
@@ -56,10 +52,6 @@ const AppContent: React.FC<IAppContent> = (props) => {
       });
   };
 
-  const login = () => {
-    props.authService.login();
-  };
-
   const logout = () => {
     props.authService.logout();
   };
@@ -67,7 +59,6 @@ const AppContent: React.FC<IAppContent> = (props) => {
   return (
     <>
       <Buttons
-        login={login}
         logout={logout}
         renewToken={renewToken}
         getUser={serviceGetUser}
