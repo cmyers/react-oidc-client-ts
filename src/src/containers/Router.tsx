@@ -24,7 +24,7 @@ const ProtectedRoute: React.FC<IProtectedRoute> = ({authService, children, ...re
     const serviceGetUser = async () => {
       const userResponse = await authService.getUser();
       if (userResponse) {
-        toastr.success('User has been successfully loaded from store.');
+        toastr.success('User has been loaded from store.');
       } else {
         toastr.info('You are not logged in.');
       }

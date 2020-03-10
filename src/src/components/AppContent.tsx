@@ -19,7 +19,7 @@ const AppContent: React.FC<IAppContent> = (props) => {
   const serviceGetUser = useCallback(async () => {
     const userResponse = await props.authService.getUser();
       if (userResponse) {
-        toastr.success('User has been successfully loaded from store.');
+        toastr.success('User has been loaded from store.');
       } else {
         toastr.info('You are not logged in.');
       }
@@ -33,7 +33,7 @@ const AppContent: React.FC<IAppContent> = (props) => {
       .callApi()
       .then(data => {
         setApi(data.data);
-        toastr.success('Api return successfully data, check in section - Api response');
+        toastr.success('Api returned data.');
       })
       .catch(error => {
         toastr.error(error);
@@ -44,7 +44,7 @@ const AppContent: React.FC<IAppContent> = (props) => {
     props.authService
       .renewToken()
       .then(user => {
-        toastr.success('Token has been sucessfully renewed. :-)');
+        toastr.success('Token has been renewed.');
         serviceGetUser();
       })
       .catch(error => {

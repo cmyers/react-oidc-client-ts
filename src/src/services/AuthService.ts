@@ -13,7 +13,6 @@ export default class AuthService implements IAuthService {
   private _userManager: UserManager;
 
   constructor() {
-    console.log("New Auth Service");
     const settings = {
       authority: Constants.stsAuthority,
       client_id: Constants.clientId,
