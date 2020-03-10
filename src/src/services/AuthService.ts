@@ -1,4 +1,4 @@
-import { Log, User, UserManager } from 'oidc-client';
+import { Log, User, UserManager, WebStorageStateStore } from 'oidc-client';
 import { Constants } from '../helpers/Constants';
 
 export interface IAuthService {
@@ -22,12 +22,15 @@ export default class AuthService implements IAuthService {
       // tslint:disable-next-line:object-literal-sort-keys
       post_logout_redirect_uri: `${Constants.clientRoot}`,
       response_type: 'code',
-      scope: Constants.clientScope
+      scope: Constants.clientScope,
+      userStore: new WebStorageStateStore({ store: window.localStorage }),
     };
     this._userManager = new UserManager(settings);
 
     Log.logger = console;
     Log.level = Log.INFO;
+
+    this._userManager.events.addAccessTokenExpired(() => console.log("expired!"));
   }
 
   public getUser(): Promise<User | null> {
