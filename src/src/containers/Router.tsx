@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Switch, Route, RouteProps, Link } from 'react-router-dom';
+import { Switch, Route, RouteProps, Link, useHistory, Redirect } from 'react-router-dom';
 import SigninCallback from '../containers/SigninCallback';
 import { IAuthService } from '../services/AuthService';
 import AppContent from '../components/AppContent';
@@ -19,6 +19,7 @@ interface IProtectedRoute extends RouteProps {
 
 const ProtectedRoute: React.FC<IProtectedRoute> = ({authService, children, ...rest}) => {
   const [user, setUser] = useState<User | null>();
+  const history = useHistory();
 
   useEffect(() => {
     const serviceGetUser = async () => {
@@ -27,13 +28,14 @@ const ProtectedRoute: React.FC<IProtectedRoute> = ({authService, children, ...re
         toastr.success('User has been loaded from store.');
       } else {
         toastr.info('You are not logged in.');
+        history.push('/');
       }
       setUser(userResponse);
       return userResponse;
     };
 
     serviceGetUser();
-  }, [authService]);
+  }, [authService, history]);
 
   const login = () => {
     authService.login();
@@ -50,7 +52,7 @@ const ProtectedRoute: React.FC<IProtectedRoute> = ({authService, children, ...re
     </Route> :
     <Buttons
       login={login}
-    />
+    />;
 }
 
 const Router: React.FC<IRouter> = (props) => {
@@ -68,6 +70,9 @@ const Router: React.FC<IRouter> = (props) => {
       </ProtectedRoute>
       <Route exact path='/signin-callback' authService={props.authService}>
         <SigninCallback authService={props.authService} />
+      </Route>
+      <Route>
+        <Redirect to={"/"} />
       </Route>
     </Switch>
   );
