@@ -2,10 +2,7 @@
 
 > OpenID Connect (OIDC) client with React functional components written in Typescript.
 
-- This is sample application that contains [oidc-client-js](https://github.com/IdentityModel/oidc-client-js) and `React` with `Typescript`.
-
-- The application is based on `create-react-app` - [Create React App](https://github.com/facebook/create-react-app)
-- Also based on https://github.com/skoruba/react-oidc-client-js
+- Based on https://github.com/skoruba/react-oidc-client-js  which in turn is based on `create-react-app` - [Create React App](https://github.com/facebook/create-react-app).
 
 # Installation
 
