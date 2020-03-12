@@ -10,5 +10,11 @@ import App from './containers/App';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root') as HTMLElement);
+import {BrowserRouter} from 'react-router-dom';
+
+ReactDOM.render(
+    <BrowserRouter>
+        <App />
+    </BrowserRouter>, document.getElementById('root') as HTMLElement);
+    
 registerServiceWorker();

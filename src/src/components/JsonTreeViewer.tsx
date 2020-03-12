@@ -8,17 +8,16 @@ export interface IJsonTreeViewer {
   shouldExpandNode?: (keyPath: Array<string | number>, data: [any] | {}, level: number) => boolean;
 }
 
-export default class JsonTreeViewer extends React.Component<IJsonTreeViewer, any> {
-  public renderJsonData() {
-    return R.not(R.isEmpty(this.props.data)) && R.not(R.isNil(this.props.data)) ? (
+const JsonTreeViewer: React.FC<IJsonTreeViewer> = (props) => {
+  const renderJsonData = () => {
+    return R.not(R.isEmpty(props.data)) && R.not(R.isNil(props.data)) ? (
       <>
-        <h1>{this.props.title}</h1>
-        <JSONTree data={this.props.data} theme="bright" shouldExpandNode={this.props.shouldExpandNode} />
+        <h1>{props.title}</h1>
+        <JSONTree data={props.data} theme="bright" shouldExpandNode={props.shouldExpandNode} />
       </>
     ) : null;
   }
-
-  public render() {
-    return this.renderJsonData();
-  }
+  return renderJsonData();
 }
+
+export default JsonTreeViewer;

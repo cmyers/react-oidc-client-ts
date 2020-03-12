@@ -5,7 +5,7 @@ export interface IHeaderProps {
   logoSrc: any;
 }
 
-export default function Header(props: IHeaderProps) {
+const Header: React.FC<IHeaderProps> = (props) => {
   return (
     <header className="App-header">
       <img src={props.logoSrc} className="App-logo" alt="logo" />
@@ -13,3 +13,5 @@ export default function Header(props: IHeaderProps) {
     </header>
   );
 }
+
+export default Header;
